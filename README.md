@@ -1,1 +1,1 @@
-# lab_Dise-oSoftware
+# lab_DiseñoSoftware
