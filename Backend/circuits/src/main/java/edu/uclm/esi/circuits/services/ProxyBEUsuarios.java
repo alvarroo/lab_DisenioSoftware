@@ -21,10 +21,10 @@ public class ProxyBEUsuarios {
 
     public void checkCredit(String token) throws Exception{
         HttpGet httpGet = new HttpGet(urlUsuarios+"checkToken?token="+token);
-       
+
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
             try (CloseableHttpResponse response = httpclient.execute(httpGet)) {
-   
+
                 int code = response.getCode();
                 if (code != 200){
                     throw new RuntimeException("El servicio solicitado requiere pago");

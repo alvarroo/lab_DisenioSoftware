@@ -1,8 +1,7 @@
 package edu.uclm.esi.circuits.model;
+
 import java.util.HashMap;
 import java.util.UUID;
-
-import org.hibernate.Length;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -13,32 +12,34 @@ import jakarta.persistence.Transient;
 
 @Entity
 public class Circuit {
-    
-    @Id @Column(length = 36)
+
+    @Id
+    @Column(length = 36)
     private String id;
     private int outputQubits;
 
     @Transient
     @JsonProperty
-    private int [][] table;
+    private int[][] table;
     @Column(length = 50)
     private String name;
 
-    public Circuit(){
+    public Circuit() {
         this.id = UUID.randomUUID().toString();
     }
 
-    public void setOutputQubits(int outputQubits){
-       this.outputQubits = outputQubits;
+    public void setOutputQubits(int outputQubits) {
+        this.outputQubits = outputQubits;
     }
 
-    public void setTable(HashMap<String, int[][]> table){
+    public void setTable(HashMap<String, int[][]> table) {
         this.table = table.get("table");
     }
 
     public int getOutputQubits() {
         return outputQubits;
     }
+
     public int[][] getTable() {
         return table;
     }
@@ -51,73 +52,67 @@ public class Circuit {
         this.id = id;
     }
 
-    //implementar (es muy facil coges los que tengas los resultados a 1 le das la vuelta y una toffoli)
-    public String generateCode(String code){
-        
-        String circuit = generateCircuit();
-        String measures = generateMeasures();
-
-        code = code.replace("#QUBITS#", table[0].length+"");
-
-        code = code.replace("#OUTPUT QUBITS#", outputQubits+"");
-
-        code = code.replace("#CIRCUIT#", circuit);
-        
-        code = code.replace("#MEASURES#", measures);
-        
+    public String generateCode(String code) {
+        code = code.replace("#QUBITS", "" + this.table[0].length);
+        code = code.replace("#OUTPUT QUBITS", "" + this.outputQubits);
+        code = code.replace("#CIRCUIT#", generateCircuit());
+        //Otros reemplazos
         return code;
-        
     }
 
+    // implementar (es muy facil coges los que tengas los resultados a 1 le das la
+    // vuelta y una toffoli)
+    // En verdad esto es solo la parte de #CIRCUIT#
     public String generateCircuit() {
-   
         String inputQbits = recorrerYGuardar();
-        StringBuilder res = new StringBuilder();
-    
-        res.append(table[0].toString()).append("\n");
-    
+        String res = "";
+        res += table[0].toString() + "\n";
         for (int j = 0; j < table.length; j++) {
             for (int i = table[0].length - outputQubits; i < table[0].length; i++) {
                 if (table[j][i] == 1) {
-    
+
                     // Si es uno se cambian los valores de los qubits de control que son 0 a 1
                     for (int k = 0; k < table[0].length - outputQubits; k++) {
                         if (table[j][k] == 0) {
-                            res.append("circuit.x(").append(k).append(")\n");
+                            res += "circuit.x( " + k + ")\n";
                         }
                     }
-    
                     // Todos los qubits de control son 1 por lo que utilizamos la toffoli
-                    res.append("circuit.mcx(").append(inputQbits).append(",").append(i).append(")\n");
-    
+                    res += "circuit.mcx( " + inputQbits + "," + i + " )\n";
+
                     // Se deshacen los cambios
                     for (int k = 0; k < table[0].length - outputQubits; k++) {
                         if (table[j][k] == 0) {
-                            res.append("circuit.x(").append(k).append(")\n");
+                            res += "circuit.x( " + k + ")\n";
                         }
                     }
-    
-                    res.append("#------------Cambios deshechos------------\n");
-                    res.append("ciruit.barrier()\n");
+
+                    res += "#------------Cambios desehchos------------\n";
+
                 }
             }
         }
-    
-        return res.toString();
+
+        /*
+         *
+         * Este método es muy facil, hay que diferenciar las salidas, y coger solo las
+         * que sean uno, cuando sean uno simplemente lo que hay
+         * que hacer es mirar las combinaciones y ponerle las x a las que sean 0 y nada
+         * a las que sean 1 y se cogen las de control y se deshacen
+         * los cambios.
+         * 
+         */
+
+        // Hay que empezar con una plantilla y tener cuidado si hay que tener qubits
+        // auxiliares.
+
+        return res;
     }
 
-    public String generateMeasures() {
-        StringBuilder res = new StringBuilder();
-        for (int i = table[0].length - outputQubits; i < table[0].length; i++) {
-            res.append("circuit.measure(").append(i).append(")\n");
-        }
-
-        return res.toString();
-    }
-    
     public void setName(String name) {
         this.name = name;
     }
+
     public String getName() {
         return name;
     }
@@ -130,9 +125,9 @@ public class Circuit {
         StringBuilder sb = new StringBuilder();
         sb.append("["); // Inicia con corchete abierto
 
-        for (int i = 0; i < table[0].length-outputQubits; i++) {
+        for (int i = 0; i < table[0].length - outputQubits; i++) {
             sb.append(i); // Agrega el número
-            if (i <  table[0].length-outputQubits-1) {
+            if (i < table[0].length - outputQubits - 1) {
                 sb.append(","); // Agrega coma si no es el último elemento
             }
         }

@@ -31,7 +31,7 @@ public class CircuitController {
     @PostMapping("/generateCode")
     public String generateCode(HttpServletRequest request, 
                                 @RequestParam(required=false) String name, @RequestBody Circuit circuit){
-      
+
         if (name != null){
             circuit.setName(name);
         }
@@ -44,6 +44,4 @@ public class CircuitController {
         
     }
 
-
 }
- 
