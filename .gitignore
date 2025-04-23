@@ -1,0 +1,42 @@
+# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+
+# Compiled output
+/Frontend/circuitsfe/dist
+/Frontend/circuitsfe/tmp
+/Frontend/circuitsfe/out-tsc
+/Frontend/circuitsfe/bazel-out
+
+# Node
+/Frontend/circuitsfe/node_modules
+/Frontend/circuitsfe/npm-debug.log
+/Frontend/circuitsfe/yarn-error.log
+
+# IDEs and editors
+/Frontend/circuitsfe/.idea/
+/Frontend/circuitsfe/.project
+/Frontend/circuitsfe/.classpath
+/Frontend/circuitsfe/.c9/
+/Frontend/circuitsfe/*.launch
+/Frontend/circuitsfe/.settings/
+/Frontend/circuitsfe/*.sublime-workspace
+
+# Visual Studio Code
+/Frontend/circuitsfe/.vscode/*
+/Frontend/circuitsfe/!.vscode/settings.json
+/Frontend/circuitsfe/!.vscode/tasks.json
+/Frontend/circuitsfe/!.vscode/launch.json
+/Frontend/circuitsfe/!.vscode/extensions.json
+/Frontend/circuitsfe/.history/*
+
+# Miscellaneous
+/Frontend/circuitsfe/.angular/cache
+/Frontend/circuitsfe/.sass-cache/
+/Frontend/circuitsfe/connect.lock
+/Frontend/circuitsfe/coverage
+/Frontend/circuitsfe/libpeerconnection.log
+/Frontend/circuitsfe/testem.log
+/Frontend/circuitsfe/typings
+
+# System files
+/Frontend/circuitsfe/.DS_Store
+/Frontend/circuitsfe/Thumbs.db
