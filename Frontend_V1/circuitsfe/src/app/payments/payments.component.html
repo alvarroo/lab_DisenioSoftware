@@ -1,0 +1,46 @@
+<div class="payments-container">
+  <div class="payments-card">
+    <h2>Realizar pago</h2>
+    
+    <div *ngIf="paymentStatus === 'idle'" class="info-section">
+      <p>Para acceder a funcionalidades avanzadas como la generación de circuitos con más de 6 qubits, necesitas realizar un pago único de 12€.</p>
+      <button class="btn-payment" (click)="prepay()">Pagar 12€</button>
+      <button class="btn-secondary" (click)="goBack()">Volver</button>
+    </div>
+    
+    <div *ngIf="paymentStatus === 'processing' && !errorMessage" class="processing-section">
+      <div class="spinner"></div>
+      <p>Procesando tu pago...</p>
+    </div>
+    
+    <div *ngIf="paymentStatus === 'success'" class="success-section">
+      <div class="success-icon">✓</div>
+      <h3>¡Pago realizado con éxito!</h3>
+      <p>Ahora puedes acceder a todas las funcionalidades de generación de circuitos.</p>
+      <p>Serás redirigido automáticamente...</p>
+    </div>
+    
+    <div *ngIf="errorMessage" class="error-section">
+      <div class="error-icon">✗</div>
+      <h3>Error en el pago</h3>
+      <p>{{ errorMessage }}</p>
+      <button class="btn-secondary" (click)="goBack()">Volver</button>
+    </div>
+    
+    <form id="payment-form" style="display:none">
+      <div class="form-row">
+        <div id="card-element"></div>
+        <div id="card-error" role="alert"></div>
+      </div>
+      
+      <button id="submit">
+        <div class="spinner hidden" id="spinner"></div>
+        <span id="button-text">Pagar ahora</span>
+      </button>
+      
+      <p class="result-message hidden">
+        Pago completado exitosamente. Puedes ver el resultado en tu <a href="https://dashboard.stripe.com/test/payments" target="_blank">dashboard de Stripe.</a>
+      </p>
+    </form>
+  </div>
+</div>
