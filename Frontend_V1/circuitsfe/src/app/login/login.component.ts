@@ -25,12 +25,12 @@ export class LoginComponent {
 
   login() {
     this.errorMessage = '';
-    
+
     if (!this.username || !this.password) {
       this.errorMessage = 'Por favor ingrese nombre de usuario y contraseña';
       return;
     }
-    
+
     this.usersService.login(this.username, this.password).subscribe(
       (token) => {
         this.manager.token = token;
@@ -41,8 +41,13 @@ export class LoginComponent {
         this.router.navigate(['/home']);
       },
       (error) => {
-        console.log(error);
-        this.errorMessage = 'Credenciales incorrectas. Por favor inténtelo de nuevo.';
+        if (error.status === 401) {
+          this.errorMessage = 'Credenciales incorrectas. Por favor inténtelo de nuevo.';
+        } else if (error.status === 403) {
+          this.errorMessage = 'El usuario no ha sido activado. Por favor revise su correo electrónico.';
+        } else {
+          this.errorMessage = 'Ha ocurrido un error inesperado. Por favor inténtelo más tarde.';
+        }
       }
     );
   }

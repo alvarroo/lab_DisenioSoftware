@@ -2,16 +2,14 @@ package edu.uclm.esi.users.http;
 
 import java.util.Map;
 
-import org.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.uclm.esi.users.model.User;
@@ -43,22 +41,7 @@ public class UserController {
         return userService.login(username, password);
     }
     
-    @GetMapping("/loginConGetYParametros")
-    public String login(@RequestParam String name, @RequestParam String pwd) {
-        return userService.login(name, pwd);
-    } 
-
-    //PathVariable es una variable de la ruta entonces aparecería así /loginConPathYParametros/name
-    @GetMapping("/loginConPathYParametros/{name}")
-    public String login2(@PathVariable String name, @RequestParam String pwd) {
-        return userService.login(name, pwd);
-    }
-
-    @PostMapping("/loginConPathYBody/{namew}")
-    public String loginConPathYBody(@PathVariable String name, @RequestBody String pwd) {
-        JSONObject json = new JSONObject(pwd);
-        return userService.login(name, json.getString("pwd"));
-    }
+    
 
     @PostMapping("/updatePaymentStatus")
     public ResponseEntity<?> updatePaymentStatus(@RequestBody Map<String, Object> body) {

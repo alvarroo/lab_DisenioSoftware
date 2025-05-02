@@ -1,9 +1,15 @@
 package edu.uclm.esi.users.services;
 import java.util.UUID;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import edu.uclm.esi.users.dao.UserRepository;
+import edu.uclm.esi.users.model.User;
 
 @Service
 public class EmailService {
@@ -11,23 +17,51 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
+    @Autowired
+    private UserRepository userRepository;
+
     public String generateConfirmationToken() {
         return UUID.randomUUID().toString();
     }
 
-    public void sendConfirmationEmail(String email, String confirmationLink) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(email);
-        message.setSubject("Confirmación de Registro");
-        confirmationLink = confirmationLink + generateConfirmationToken();
-        message.setText("Por favor, haz clic en el siguiente enlace para confirmar tu registro: " + confirmationLink);
-        mailSender.send(message);
+    public void sendConfirmationEmail(String email, String confirmationLink, User user) {
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+
+            helper.setTo(email);
+            helper.setSubject("Confirmación de Registro");
+
+            String token = generateConfirmationToken();
+            confirmationLink = confirmationLink + token;
+            user.setActivationToken(token);
+
+            // Formatear el correo con HTML
+            String emailContent = "<html><body>" +
+                    "<p>Por favor, haz clic en el siguiente botón para confirmar tu registro:</p>" +
+                    "<a href='" + confirmationLink + "' style='text-decoration: none;'>" +
+                    "<button style='background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer;'>Confirmar Registro</button>" +
+                    "</a>" +
+                    "</body></html>";
+
+            helper.setText(emailContent, true); // El segundo parámetro indica que es HTML
+
+            mailSender.send(mimeMessage);
+            userRepository.save(user); // Guardar el token en la base de datos
+        } catch (Exception e) {
+            throw new RuntimeException("Error al enviar el correo de confirmación", e);
+        }
     }
 
-    public boolean validateConfirmation(String token) {
-        // Simulate token validation
-        System.out.println("Validating token: " + token);
-        // In a real implementation, you would check the token against a database or cache
-        return true; // Assume validation is successful for now
+    public void activate(String token) {
+
+        User user = userRepository.findByActivationToken(token);
+        if (user != null) {
+            user.setHasActivated(true);
+            user.setActivationToken(""); // Limpiar el token después de la activación
+            userRepository.save(user);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Token de activación inválido");
+        }
     }
 }

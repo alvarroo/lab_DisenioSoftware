@@ -28,6 +28,9 @@ public class User {
     @Column(nullable = false)
     private int balance = 0;
 
+    @Column(nullable = false)
+    private String activationToken = "";
+
     public User() {
     }
     
@@ -83,5 +86,13 @@ public class User {
 
     public void setBalance(int balance) {
         this.balance = balance;
+    }
+
+    public String getActivationToken() {
+        return activationToken;
+    }
+
+    public void setActivationToken(String activationToken) {
+        this.activationToken = activationToken;
     }
 }

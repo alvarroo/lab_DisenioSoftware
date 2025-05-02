@@ -33,8 +33,8 @@ public class UserService {
         userRepository.save(user);
 
         // Generate a confirmation link (placeholder logic)
-        String confirmationLink = "http://example.com/confirm?token=";
-        emailService.sendConfirmationEmail(email, confirmationLink);
+        String confirmationLink = "http://localhost:8081/email/activate?token=";
+        emailService.sendConfirmationEmail(email, confirmationLink, user);
 
         return user;
     }
@@ -44,6 +44,10 @@ public class UserService {
         
         if (user == null || !user.getPassword().equals(password)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciales inválidas");
+        }
+
+        if (!user.isHasActivated()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "El usuario no ha sido activado");
         }
         
         return tokenService.generateToken(user);

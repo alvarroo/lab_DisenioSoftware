@@ -8,4 +8,6 @@ import edu.uclm.esi.users.model.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
     User findByUsername(String username);
+
+    User findByActivationToken(String token);
 }
