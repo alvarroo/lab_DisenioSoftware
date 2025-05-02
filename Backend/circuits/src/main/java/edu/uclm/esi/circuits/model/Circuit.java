@@ -2,7 +2,6 @@ package edu.uclm.esi.circuits.model;
 import java.util.HashMap;
 import java.util.UUID;
 
-import org.hibernate.Length;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

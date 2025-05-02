@@ -18,9 +18,15 @@ public class User {
     
     @Column(length = 100, nullable = false)
     private String email;
-    
+
+    @Column(nullable = false)
+    private boolean hasActivated = false;
+
     @Column(nullable = false)
     private boolean hasPaid = false;
+
+    @Column(nullable = false)
+    private int balance = 0;
 
     public User() {
     }
@@ -61,5 +67,21 @@ public class User {
 
     public void setHasPaid(boolean hasPaid) {
         this.hasPaid = hasPaid;
+    }
+
+    public boolean isHasActivated() {
+        return hasActivated;
+    }
+
+    public void setHasActivated(boolean hasActivated) {
+        this.hasActivated = hasActivated;
+    }
+
+    public int getBalance() {
+        return balance;
+    }
+
+    public void setBalance(int balance) {
+        this.balance = balance;
     }
 }

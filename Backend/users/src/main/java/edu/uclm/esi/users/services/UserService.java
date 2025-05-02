@@ -16,6 +16,9 @@ public class UserService {
     
     @Autowired
     private TokenService tokenService;
+    
+    @Autowired
+    private EmailService emailService;
 
     public User register(String username, String password, String email) {
         if (username == null || password == null || email == null) {
@@ -27,7 +30,13 @@ public class UserService {
         }
         
         User user = new User(username, password, email);
-        return userRepository.save(user);
+        userRepository.save(user);
+
+        // Generate a confirmation link (placeholder logic)
+        String confirmationLink = "http://example.com/confirm?token=";
+        emailService.sendConfirmationEmail(email, confirmationLink);
+
+        return user;
     }
     
     public String login(String username, String password) {
