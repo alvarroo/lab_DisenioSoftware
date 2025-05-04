@@ -3,7 +3,6 @@ package edu.uclm.esi.circuits.http;
 import java.util.HashMap;
 import java.util.Map;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,10 +25,9 @@ public class CircuitController {
     @Autowired
     private CircuitService service;
 
-
     //http.../../generateCode
     @PostMapping("/generateCode")
-    public String generateCode(HttpServletRequest request, 
+    public Map<String, String> generateCode(HttpServletRequest request, 
                                 @RequestParam(required=false) String name, @RequestBody Circuit circuit){
       
         if (name != null){
@@ -37,13 +35,12 @@ public class CircuitController {
         }
         String token = request.getHeader("token_generacion");
         try{
-            return this.service.generateCode(circuit, token);
+            String code = this.service.generateCode(circuit, token);
+            Map<String, String> response = new HashMap<>();
+            response.put("code", code);
+            return response;
         }  catch (Exception e){
             throw new ResponseStatusException(HttpStatus.PAYMENT_REQUIRED, e.getMessage());
         }
-        
     }
-
-
 }
- 

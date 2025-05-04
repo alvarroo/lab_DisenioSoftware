@@ -1,0 +1,94 @@
+<div class="circuit-container">
+  <header class="app-header">
+    <h1>Generador de Circuitos Cuánticos</h1>
+    <button class="btn-logout" (click)="logout()">Cerrar sesión</button>
+  </header>
+
+  <div class="main-content">
+    <div class="config-panel">
+      <h3>Configuración del circuito</h3>
+      
+      <div class="form-group">
+        <label for="inputQubits">Número de qubits de entrada</label>
+        <input type="number" id="inputQubits" [(ngModel)]="inputQubits" min="1" class="form-control">
+      </div>
+      
+      <div class="form-group">
+        <label for="outputQubits">Número de qubits de salida</label>
+        <input type="number" id="outputQubits" [(ngModel)]="outputQubits" min="1" class="form-control">
+      </div>
+      
+      <button 
+        class="btn-primary" 
+        (click)="buildMatrix()" 
+        [disabled]="inputQubits <= 0 || outputQubits <= 0">
+        Construir matriz
+      </button>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+      <button *ngIf="showPaymentButton" class="btn-primary payment-button" (click)="showPaymentForm = true; initStripeElements()">
+        Realizar pago ahora (12 EUR)
+      </button>
+    </div>
+
+    <!-- Modal de pago con Stripe -->
+    <div *ngIf="showPaymentForm" class="payment-modal">
+      <div class="payment-container">
+        <h3>Pago para servicio de circuitos avanzados</h3>
+        <p>Este pago te permitirá usar circuitos con más de 6 qubits.</p>
+        <div class="amount">Precio: 12 EUR</div>
+        
+        <div *ngIf="!paymentProcessing && !paymentSuccess" class="stripe-container">
+          <div id="card-element">
+            <!-- El elemento de Stripe para la tarjeta se insertará aquí -->
+          </div>
+          <div id="card-errors" role="alert"></div>
+          
+          <button class="btn-primary" (click)="processPayment()">Pagar ahora</button>
+          <button class="btn-cancel" (click)="cancelPayment()">Cancelar</button>
+        </div>
+        
+        <div *ngIf="paymentProcessing" class="processing">
+          Procesando pago...
+        </div>
+        
+        <div *ngIf="paymentSuccess" class="success">
+          <p>¡Pago realizado con éxito!</p>
+          <button class="btn-primary" (click)="closePaymentAndGenerateCode()">Continuar</button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="matrix" class="matrix-container">
+      <h3>Matriz de valores</h3>
+      <div class="table-wrapper">
+        <table class="matrix-table">
+          <tr>
+            <td colspan="100%" class="actions">
+              <button class="btn-primary" (click)="generateCode()">Generar código</button>
+            </td>
+          </tr>
+          <tr *ngFor="let row of matrix.table; let rowNumber = index">
+            <td *ngFor="let value of row; let colNumber = index"
+                [ngClass]="{'input-cell': colNumber < inputQubits, 'output-cell': colNumber >= inputQubits}"
+                (click)="colNumber >= inputQubits && negate(rowNumber, colNumber)">
+              {{ value }}
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div *ngIf="showCode" class="code-container">
+      <h3>Código generado</h3>
+      <div class="code-content">
+        <pre>{{ generatedCode }}</pre>
+      </div>
+      <button class="btn-print" (click)="printCode()">
+        <i class="fa fa-print"></i> Imprimir código
+      </button>
+    </div>
+  </div>
+</div>

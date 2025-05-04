@@ -2,7 +2,6 @@ package edu.uclm.esi.circuits.model;
 import java.util.HashMap;
 import java.util.UUID;
 
-import org.hibernate.Length;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -51,22 +50,45 @@ public class Circuit {
         this.id = id;
     }
 
-    //implementar (es muy facil coges los que tengas los resultados a 1 le das la vuelta y una toffoli)
     public String generateCode(String code){
         
         String circuit = generateCircuit();
         String measures = generateMeasures();
+        String inputInit = generateInputInitialization();
+        String outputInit = generateOutputInitialization();
 
         code = code.replace("#QUBITS#", table[0].length+"");
-
         code = code.replace("#OUTPUT QUBITS#", outputQubits+"");
-
+        code = code.replace("#INPUT_INITIALIZATION#", inputInit);
+        code = code.replace("#OUTPUT_INITIALIZATION#", outputInit);
         code = code.replace("#CIRCUIT#", circuit);
-        
         code = code.replace("#MEASURES#", measures);
         
         return code;
+    }
+
+    // Genera la inicialización individual para los qubits de entrada
+    private String generateInputInitialization() {
+        StringBuilder sb = new StringBuilder();
+        int inputQubits = table[0].length - outputQubits;
         
+        for (int i = 0; i < inputQubits; i++) {
+            sb.append("circuit.initialize(ZERO, ").append(i).append(")\n");
+        }
+        
+        return sb.toString();
+    }
+
+    // Genera la inicialización individual para los qubits de salida
+    private String generateOutputInitialization() {
+        StringBuilder sb = new StringBuilder();
+        int inputQubits = table[0].length - outputQubits;
+        
+        for (int i = inputQubits; i < table[0].length; i++) {
+            sb.append("circuit.initialize(ZERO, ").append(i).append(")\n");
+        }
+        
+        return sb.toString();
     }
 
     public String generateCircuit() {
@@ -74,7 +96,9 @@ public class Circuit {
         String inputQbits = recorrerYGuardar();
         StringBuilder res = new StringBuilder();
     
-        res.append(table[0].toString()).append("\n");
+        // Añadir compuertas Hadamard para todos los qubits para ponerlos en superposición
+        res.append("for i in range (0, qubits) :\n");
+        res.append("    circuit.h(i)\n");
     
         for (int j = 0; j < table.length; j++) {
             for (int i = table[0].length - outputQubits; i < table[0].length; i++) {
@@ -83,22 +107,27 @@ public class Circuit {
                     // Si es uno se cambian los valores de los qubits de control que son 0 a 1
                     for (int k = 0; k < table[0].length - outputQubits; k++) {
                         if (table[j][k] == 0) {
-                            res.append("circuit.x(").append(k).append(")\n");
+                            res.append("circuit.h(").append(k).append(")\n");
+                            res.append("circuit.z(").append(k).append(")\n");
+                            res.append("circuit.h(").append(k).append(")\n");
                         }
                     }
     
-                    // Todos los qubits de control son 1 por lo que utilizamos la toffoli
-                    res.append("circuit.mcx(").append(inputQbits).append(",").append(i).append(")\n");
+                    // Aplicar la transformación al qubit de salida
+                    res.append("circuit.h(").append(i).append(")\n");
+                    res.append("circuit.mcrz(pi, ").append(inputQbits).append(", ").append(i).append(")\n");
+                    res.append("circuit.h(").append(i).append(")\n");
     
-                    // Se deshacen los cambios
+                    // Se deshacen los cambios en los qubits de control
                     for (int k = 0; k < table[0].length - outputQubits; k++) {
                         if (table[j][k] == 0) {
-                            res.append("circuit.x(").append(k).append(")\n");
+                            res.append("circuit.h(").append(k).append(")\n");
+                            res.append("circuit.z(").append(k).append(")\n");
+                            res.append("circuit.h(").append(k).append(")\n");
                         }
                     }
     
-                    res.append("#------------Cambios deshechos------------\n");
-                    res.append("ciruit.barrier()\n");
+                    res.append("circuit.barrier()\n");
                 }
             }
         }
@@ -108,10 +137,11 @@ public class Circuit {
 
     public String generateMeasures() {
         StringBuilder res = new StringBuilder();
-        for (int i = table[0].length - outputQubits; i < table[0].length; i++) {
-            res.append("circuit.measure(").append(i).append(")\n");
-        }
-
+        
+        // Utilizamos el formato de mediciones del ejemplo, midiendo todos los qubits
+        res.append("for i in range(0, qubits) :\n");
+        res.append("\tcircuit.measure(i, qubits-i-1)\n");
+        
         return res.toString();
     }
     

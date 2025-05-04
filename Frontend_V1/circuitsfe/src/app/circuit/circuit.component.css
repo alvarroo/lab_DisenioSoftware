@@ -1,0 +1,274 @@
+.circuit-container {
+  min-height: 100vh;
+  background-color: #f5f7fa;
+  font-family: Arial, sans-serif;
+}
+
+.app-header {
+  background-color: #2684ff;
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.btn-logout {
+  background: transparent;
+  color: white;
+  border: 1px solid white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-logout:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #555;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.config-panel {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.btn-primary {
+  background-color: #2684ff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: #1a73e8;
+}
+
+.btn-primary:disabled {
+  background-color: #a1c6ff;
+  cursor: not-allowed;
+}
+
+.error-message {
+  background-color: #ffebee;
+  color: #d32f2f;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 2rem;
+}
+
+.matrix-container {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  overflow-x: auto;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+.matrix-table {
+  border-collapse: separate;
+  border-spacing: 2px;
+  margin: 0 auto;
+}
+
+.matrix-table td {
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  vertical-align: middle;
+  font-weight: bold;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.input-cell {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.output-cell {
+  background-color: #ffebee;
+  color: #c62828;
+  cursor: pointer;
+}
+
+.output-cell:hover {
+  background-color: #ffcdd2;
+}
+
+.actions {
+  padding: 1rem;
+  text-align: center;
+}
+
+.code-container {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 2rem;
+}
+
+.code-content {
+  background-color: #f5f5f5;
+  padding: 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin-bottom: 1rem;
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.btn-print {
+  background-color: #43a047;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.btn-print:hover {
+  background-color: #388e3c;
+}
+
+h3 {
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+/* Estilos para el botón de pago */
+.payment-button {
+  margin-top: 15px;
+  background-color: #28a745;
+}
+
+/* Estilos para el modal de pago */
+.payment-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.payment-container {
+  background: white;
+  border-radius: 10px;
+  padding: 30px;
+  width: 500px;
+  max-width: 90%;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.payment-container h3 {
+  margin-top: 0;
+  color: #333;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 15px;
+}
+
+.amount {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 20px 0;
+}
+
+.stripe-container {
+  margin-top: 20px;
+}
+
+#card-element {
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+#card-errors {
+  color: #dc3545;
+  margin-bottom: 15px;
+  min-height: 20px;
+}
+
+.processing {
+  text-align: center;
+  padding: 20px;
+  font-style: italic;
+}
+
+.success {
+  color: #28a745;
+  text-align: center;
+  padding: 20px;
+}
+
+.btn-cancel {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 10px;
+}
