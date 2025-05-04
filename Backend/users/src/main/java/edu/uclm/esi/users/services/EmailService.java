@@ -58,7 +58,6 @@ public class EmailService {
         User user = userRepository.findByActivationToken(token);
         if (user != null) {
             user.setHasActivated(true);
-            user.setActivationToken(""); // Limpiar el token después de la activación
             userRepository.save(user);
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Token de activación inválido");
