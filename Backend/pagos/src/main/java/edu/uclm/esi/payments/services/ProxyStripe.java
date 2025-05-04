@@ -1,6 +1,5 @@
 package edu.uclm.esi.payments.services;
 
-import java.io.InputStream;
 
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;

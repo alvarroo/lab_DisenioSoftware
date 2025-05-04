@@ -1,8 +1,8 @@
 package edu.uclm.esi.circuits.services;
 
-import java.io.File;
+
 import java.io.InputStream;
-import java.util.Map;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class CircuitService {
     private CircuitDao circuitDao;
 
 
-    public String generateCode(Circuit circuit, String token)throws Exception{ {
+    public String generateCode(Circuit circuit, String token)throws Exception {
         
         if(circuit.getCubits() > 6){      
             if(token == null){
@@ -36,8 +36,6 @@ public class CircuitService {
         return code;
     }
         
-    }
-
     private String readFile(String fileName) throws Exception{
         
         ClassLoader classLoader = getClass().getClassLoader();
