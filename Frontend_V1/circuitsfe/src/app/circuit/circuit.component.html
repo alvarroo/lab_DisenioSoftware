@@ -28,7 +28,7 @@
 
     <div *ngIf="errorMessage" class="error-message">
       {{ errorMessage }}
-      <button *ngIf="showPaymentButton" class="btn-primary payment-button" (click)="showPaymentForm = true; initStripeElements()">
+      <button *ngIf="showPaymentButton" class="btn-primary payment-button" (click)="handlePaymentButtonClick()">
         Realizar pago ahora (12 EUR)
       </button>
     </div>
