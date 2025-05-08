@@ -22,6 +22,11 @@ public class TokensController {
 
     @GetMapping("/checkToken")
     public void checkToken(@RequestParam String token){
+        // Validar que el token no sea nulo o vacío
+        if (token == null || token.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El token no puede estar vacío");
+        }
+
         if (!tokenService.validateToken(token)) {
             throw new ResponseStatusException(HttpStatus.PAYMENT_REQUIRED, "Token inválido o usuario sin pago");
         }

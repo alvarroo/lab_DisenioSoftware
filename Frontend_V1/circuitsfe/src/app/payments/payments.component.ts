@@ -34,6 +34,11 @@ export class PaymentsComponent {
   }
 
   prepay() {
+    // Mostrar un mensaje de confirmación antes de proceder con el pago
+    if (!confirm('¿Estás seguro de que deseas realizar el pago?')) {
+      return;
+    }
+
     this.paymentStatus = 'processing';
     this.errorMessage = '';
     

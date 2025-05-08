@@ -26,8 +26,9 @@ export class LoginComponent {
   login() {
     this.errorMessage = '';
 
+    // Validar que los campos no estén vacíos
     if (!this.username || !this.password) {
-      this.errorMessage = 'Por favor ingrese nombre de usuario y contraseña';
+      this.errorMessage = 'El nombre de usuario y la contraseña son obligatorios';
       return;
     }
 

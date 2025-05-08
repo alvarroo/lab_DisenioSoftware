@@ -80,6 +80,12 @@ export class CircuitComponent implements OnInit {
       this.errorMessage = '';
       this.showPaymentButton = false;
       
+      // Validar que el número de qubits sea válido
+      if (this.outputQubits <= 0) {
+        this.errorMessage = 'El número de qubits de salida debe ser mayor que 0';
+        return;
+      }
+
       if (!this.matrix) {
         this.errorMessage = 'Por favor, construya una matriz primero';
         return;

@@ -11,6 +11,11 @@ export class CircuitService {
   constructor(private http : HttpClient) { }
 
   generateCode(outputQubits: number, matrix: Matrix, token?: string): Observable<string> {
+    // Validar que los parámetros no sean nulos o inválidos
+    if (!outputQubits || !matrix) {
+      throw new Error("Los parámetros outputQubits y matrix son obligatorios");
+    }
+
     let body = {
       outputQubits: outputQubits,
       table: matrix

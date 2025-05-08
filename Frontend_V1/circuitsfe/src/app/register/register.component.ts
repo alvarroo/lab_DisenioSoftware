@@ -23,13 +23,25 @@ export class RegisterComponent {
   register() {
     this.errorMessage = '';
     
-    if (!this.username || !this.password || !this.email) {
-      this.errorMessage = 'Por favor complete todos los campos obligatorios';
+    // Validar que los campos no estén vacíos
+    if (!this.username || !this.email || !this.password || !this.confirmPassword) {
+      this.errorMessage = 'Todos los campos son obligatorios';
       return;
     }
-    
+
+    // Validar que las contraseñas coincidan
     if (this.password !== this.confirmPassword) {
       this.errorMessage = 'Las contraseñas no coinciden';
+      return;
+    }
+
+    // Validar formato del email
+    //^[^\s@]+: Asegura que el correo comience con uno o más caracteres que no sean espacios ni el símbolo @
+    //@[^\s@]+: Asegura que haya un símbolo @ seguido de uno o más caracteres que no sean espacios
+    //\.[^\s@]+$: Asegura que haya un punto (.) seguido de uno o más caracteres que no sean espacios, al final del correo
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(this.email)) {
+      this.errorMessage = 'El formato del correo electrónico no es válido';
       return;
     }
     

@@ -1,8 +1,8 @@
 package edu.uclm.esi.users.services;
 
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,18 +20,18 @@ public class TokenService {
     private Map<String, String> tokens = new HashMap<>();
 
     public String generateToken(User user) {
-        // Crear un token simple (en un entorno real usaríamos JWT)
-        JSONObject json = new JSONObject();
-        json.put("username", user.getUsername());
-        json.put("timestamp", System.currentTimeMillis());
-        
-        String token = Base64.getEncoder().encodeToString(json.toString().getBytes());
+        // Usar un token más seguro con UUID y timestamp
+        String token = UUID.randomUUID().toString() + "-" + System.currentTimeMillis();
         tokens.put(token, user.getUsername());
-        
         return token;
     }
     
     public boolean validateToken(String token) {
+        // Validar que el token no sea nulo o vacío
+        if (token == null || token.isEmpty()) {
+            return false;
+        }
+
         String username = tokens.get(token);
         if (username == null) {
             return false;

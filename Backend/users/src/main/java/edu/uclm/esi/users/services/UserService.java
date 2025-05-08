@@ -21,6 +21,14 @@ public class UserService {
     private EmailService emailService;
 
     public User register(String username, String password, String email) {
+        // Validar que los campos no contengan caracteres maliciosos para prevenir inyecciones
+        if (!username.matches("^[a-zA-Z0-9._-]{3,}$")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El nombre de usuario contiene caracteres no permitidos");
+        }
+        if (!email.matches("^[\\w.%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El formato del email no es válido");
+        }
+
         if (username == null || password == null || email == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Los campos de usuario, contraseña y email son obligatorios");
         }
@@ -40,6 +48,8 @@ public class UserService {
     }
     
     public String login(String username, String password) {
+        // Limitar intentos de inicio de sesión para prevenir ataques de fuerza bruta
+        // (Placeholder para lógica de conteo de intentos fallidos)
         User user = userRepository.findByUsername(username);
         
         if (user == null || !user.getPassword().equals(password)) {

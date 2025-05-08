@@ -25,6 +25,11 @@ public class EmailService {
     }
 
     public void sendConfirmationEmail(String email, String confirmationLink, User user) {
+        // Validar que el email no sea nulo o vacío
+        if (email == null || email.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El email no puede estar vacío");
+        }
+
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);

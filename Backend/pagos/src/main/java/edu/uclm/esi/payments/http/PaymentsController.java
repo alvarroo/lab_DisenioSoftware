@@ -35,6 +35,11 @@ public class PaymentsController {
     
     @PostMapping("/confirm")
     public String confirmPayment(@RequestBody Map<String, String> body) {
+        // Validar que el nombre de usuario no sea nulo o vacío
+        if (body.get("username") == null || body.get("username").isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El nombre de usuario es obligatorio");
+        }
+
         try {
             String username = body.get("username");
             return this.service.confirmPayment(username);
