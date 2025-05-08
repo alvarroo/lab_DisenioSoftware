@@ -16,6 +16,7 @@ export class LoginComponent {
   username: string = '';
   password: string = '';
   errorMessage: string = '';
+  honeypot: string = ''; // Campo honeypot para detectar bots
 
   constructor(
     private usersService: UsersService, 
@@ -25,6 +26,11 @@ export class LoginComponent {
 
   login() {
     this.errorMessage = '';
+
+    if (this.honeypot) {
+      this.errorMessage = 'Solicitud rechazada: posible bot detectado.';
+      return;
+    }
 
     if (!this.username || !this.password) {
       this.errorMessage = 'Por favor ingrese nombre de usuario y contraseña';
