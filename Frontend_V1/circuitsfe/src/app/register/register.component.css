@@ -99,3 +99,83 @@ label {
 .login-link a:hover {
   text-decoration: underline;
 }
+
+/* Estilos para el indicador de fortaleza de contraseña */
+.password-strength-meter {
+  margin-top: 8px;
+}
+
+.strength-bar {
+  height: 6px;
+  background-color: #e0e0e0;
+  border-radius: 3px;
+  margin-bottom: 5px;
+}
+
+.strength-progress {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.strength-text {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.weak {
+  color: #ff5252;
+}
+
+.strength-progress:not(.medium):not(.good):not(.strong) {
+  background-color: #ff5252;
+}
+
+.medium {
+  color: #ffab40;
+}
+
+.strength-progress.medium {
+  background-color: #ffab40;
+}
+
+.good {
+  color: #69f0ae;
+}
+
+.strength-progress.good {
+  background-color: #69f0ae;
+}
+
+.strong {
+  color: #00c853;
+}
+
+.strength-progress.strong {
+  background-color: #00c853;
+}
+
+/* Estilos para requisitos de contraseña */
+.password-requirements {
+  margin-top: 10px;
+  font-size: 12px;
+}
+
+.password-requirements ul {
+  padding-left: 20px;
+  margin: 5px 0;
+}
+
+.requirement-error {
+  color: #ff5252;
+}
+
+.requirement-success {
+  color: #00c853;
+}
+
+.password-match-error {
+  color: #ff5252;
+  font-size: 12px;
+  margin-top: 5px;
+}

@@ -2,6 +2,7 @@ package edu.uclm.esi.users.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -19,6 +20,23 @@ public class UserService {
     
     @Autowired
     private EmailService emailService;
+    
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    public void validatePassword(String password) {
+        if (password.length() < 8) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña debe tener al menos 8 caracteres");
+        }
+        if (!password.matches(".*[A-Z].*")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña debe contener al menos una letra mayúscula");
+        }
+        if (!password.matches(".*[0-9].*")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña debe contener al menos un número");
+        }
+        if (!password.matches(".*[\\W_].*")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña debe contener al menos un carácter especial");
+        }
+    }
 
     public User register(String username, String password, String email) {
         if (username == null || password == null || email == null) {
@@ -29,7 +47,13 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "El nombre de usuario ya existe");
         }
         
-        User user = new User(username, password, email);
+        // Validar contraseña
+        validatePassword(password);
+        
+        // Cifrar la contraseña
+        String encryptedPassword = passwordEncoder.encode(password);
+        
+        User user = new User(username, encryptedPassword, email);
         userRepository.save(user);
 
         // Generate a confirmation link (placeholder logic)
@@ -42,7 +66,7 @@ public class UserService {
     public String login(String username, String password) {
         User user = userRepository.findByUsername(username);
         
-        if (user == null || !user.getPassword().equals(password)) {
+        if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciales inválidas");
         }
 

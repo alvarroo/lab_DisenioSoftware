@@ -34,9 +34,32 @@
         type="password" 
         id="password" 
         [(ngModel)]="password" 
+        (input)="checkPasswordStrength()"
         placeholder="Introduce tu contraseña"
         class="form-control" 
         required>
+        
+      <!-- Indicador de seguridad de contraseña -->
+      <div *ngIf="password" class="password-strength-meter">
+        <div class="strength-bar">
+          <div class="strength-progress" [style.width.%]="passwordStrength"></div>
+        </div>
+        <span class="strength-text" [ngClass]="{'weak': passwordStrength <= 25, 'medium': passwordStrength > 25 && passwordStrength <= 50, 'good': passwordStrength > 50 && passwordStrength <= 75, 'strong': passwordStrength > 75}">
+          {{ passwordFeedback }}
+        </span>
+      </div>
+      
+      <!-- Lista de requisitos de contraseña -->
+      <div *ngIf="password" class="password-requirements">
+        <ul>
+          <li *ngFor="let error of passwordErrors" class="requirement-error">
+            {{ error }}
+          </li>
+          <li *ngIf="passwordStrength >= 100" class="requirement-success">
+            ¡Contraseña válida!
+          </li>
+        </ul>
+      </div>
     </div>
     
     <div class="form-group">
@@ -48,6 +71,9 @@
         placeholder="Confirma tu contraseña"
         class="form-control" 
         required>
+      <div *ngIf="password && confirmPassword && password !== confirmPassword" class="password-match-error">
+        Las contraseñas no coinciden
+      </div>
     </div>
     
     <div class="button-group">
