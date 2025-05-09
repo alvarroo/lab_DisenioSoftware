@@ -248,5 +248,20 @@ export class CircuitComponent implements OnInit {
       this.manager.logout();
       this.router.navigate(['/login']);
     }
+
+    handlePaymentButtonClick() {
+      this.paymentsService.prepay().subscribe(
+        () => {
+          this.showPaymentForm = true; // Asegurarse de que el formulario de Stripe sea visible
+          setTimeout(() => {
+            this.initStripeElements(); // Llamar a initStripeElements después de que el DOM esté listo
+          }, 0);
+        },
+        (error) => {
+          console.error('Error during prepay:', error);
+          this.errorMessage = 'Error al preparar el pago. Inténtelo de nuevo más tarde.';
+        }
+      );
+    }
 }
 

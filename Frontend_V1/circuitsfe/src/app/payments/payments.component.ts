@@ -4,6 +4,7 @@ import { PaymentsService } from '../payments.service';
 import { ManagerService } from '../manager.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CircuitComponent } from '../circuit/circuit.component';
 
 declare var Stripe: any;
 

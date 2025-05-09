@@ -13,19 +13,19 @@ public class PaymentsService {
     @Autowired
     private ProxyStripe proxyStripe;
     
-    @Autowired
-    private ProxyUsers proxyUsers;
+    //@Autowired
+    //private ProxyUsers proxyUsers;
 
     public String prepay() throws Exception{
         JSONObject jsonConf = this.readConf("conf.json");
         return this.proxyStripe.prepay(jsonConf);
     }
     
-    public String confirmPayment(String username) throws Exception {
+    /*public String confirmPayment(String username) throws Exception {
         // Actualizamos el estado de pago del usuario
         proxyUsers.updatePaymentStatus(username, true);
         return "Pago confirmado correctamente";
-    }
+    }*/
 
     private JSONObject readConf(String file) throws Exception{
         ClassLoader classLoader = getClass().getClassLoader();
