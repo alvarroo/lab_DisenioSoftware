@@ -32,12 +32,8 @@ public class TokenService {
     }
     
     public boolean validateToken(String token) {
-        String username = tokens.get(token);
-        if (username == null) {
-            return false;
-        }
         
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findBySesionToken(token);
         return user != null && user.isHasPaid();
     }
     

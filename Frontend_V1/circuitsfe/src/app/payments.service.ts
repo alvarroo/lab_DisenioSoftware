@@ -14,9 +14,8 @@ export class PaymentsService {
     return this.http.get<string>(`${this.baseUrl}/prepay`, { responseType: 'text' as 'json' });
   }
   
-  confirmPayment(username: string): Observable<string> {
-    return this.http.post<string>(`${this.baseUrl}/confirm`, { 
-      username: username 
-    }, { responseType: 'text' as 'json' });
+  confirmPayment(token:any): Observable<string> {
+    return this.http.post<string>(`${this.baseUrl}/confirm`, 
+    { token: token }, { responseType: 'text' as 'json' });
   }
 }

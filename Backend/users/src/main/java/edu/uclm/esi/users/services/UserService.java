@@ -56,7 +56,6 @@ public class UserService {
         User user = new User(username, encryptedPassword, email);
         userRepository.save(user);
 
-        // Generate a confirmation link (placeholder logic)
         String confirmationLink = "http://localhost:8081/email/activate?token=";
         emailService.sendConfirmationEmail(email, confirmationLink, user);
 
@@ -74,17 +73,21 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "El usuario no ha sido activado");
         }
         
-        return tokenService.generateToken(user);
+        String token = tokenService.generateToken(user);
+        user.setSesionToken(token);
+        userRepository.save(user);
+        return token;
     }
     
-    public void updatePaymentStatus(String username, boolean hasPaid) {
-        User user = userRepository.findByUsername(username);
+
+    public void updateSesionToken(String token) {
+        User user = userRepository.findByUsername(token);
         
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado");
         }
         
-        user.setHasPaid(hasPaid);
+        user.setSesionToken(null);;
         userRepository.save(user);
     }
 }

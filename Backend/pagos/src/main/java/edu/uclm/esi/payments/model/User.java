@@ -1,4 +1,4 @@
-package edu.uclm.esi.users.model;
+package edu.uclm.esi.payments.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

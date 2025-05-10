@@ -33,13 +33,13 @@ public class PaymentsController {
         }
     }
     
-    /*@PostMapping("/confirm")
+    @PostMapping("/confirm")
     public String confirmPayment(@RequestBody Map<String, String> body) {
         try {
-            String username = body.get("username");
-            return this.service.confirmPayment(username);
+            String token = body.get("token");
+            return this.service.confirmPayment(token);
         } catch(Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al confirmar el pago: " + e.getMessage());
         }
-    }*/
+    }
 }

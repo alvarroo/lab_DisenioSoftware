@@ -32,7 +32,7 @@ export class CircuitComponent implements OnInit {
 
     constructor(
       private service: CircuitService, 
-      private manager: ManagerService,
+      public manager: ManagerService,
       private paymentsService: PaymentsService,
       private router: Router
     ) {
@@ -40,14 +40,20 @@ export class CircuitComponent implements OnInit {
       this.outputQubits = 2;
     }
 
-    ngOnInit() {
+    async ngOnInit() {
       // Si no hay autenticación y hay una ruta de login, redirigir
       if (!this.manager.isAuthenticated) {
         this.router.navigate(['/login']);
       }
+      console.log('User:', this.manager.currentUser);
       
-      // Cargar el script de Stripe
-      this.loadStripeScript();
+        try {
+          await this.loadStripeScript();
+          console.log('Script de Stripe cargado correctamente');
+        } catch (error) {
+          console.error(error);
+          this.errorMessage = 'Error al cargar el script de Stripe. Por favor, recargue la página.';
+        }
     }
 
     loadStripeScript() {
@@ -56,7 +62,7 @@ export class CircuitComponent implements OnInit {
         script.id = 'stripe-script';
         script.src = 'https://js.stripe.com/v3/';
         script.onload = () => {
-          this.stripe = Stripe('pk_test_51R3da8HGC2ak83XFnbip8wiT7af2s4I809w2ox88F3FBZnDJNtpeoy52DyJuqZe7gdpwk8vBrjtbTYG5EcVNlDXc001jN1ntPf');
+          this.stripe = Stripe('pk_test_51R3da8HGC2ak83XFq7ZrqtWxD44MM1bKMbpUt1hF70QG4H19A5rDPUTbje0LScMxhEi39JGbibdkEVKJXMb9maqd00Ip4nAvcL');
         };
         document.body.appendChild(script);
       }
@@ -104,7 +110,8 @@ export class CircuitComponent implements OnInit {
 
     initStripeElements() {
       const elements = this.stripe.elements();
-      
+      this.paymentProcessing = false;
+      this.paymentSuccess = false;
       const style = {
         base: {
           color: '#32325d',
@@ -147,59 +154,32 @@ export class CircuitComponent implements OnInit {
     }
 
     processPayment() {
-      this.paymentProcessing = true;
+      let self = this
+      this.stripe.confirmCardPayment(this.clientSecret, {
+        payment_method: {
+        card: this.card,
+         
+      }
       
-      // Primero obtenemos el clientSecret del backend
-      this.paymentsService.prepay().subscribe(
-        (clientSecret: string) => {
-          this.clientSecret = clientSecret;
-          
-          // Una vez obtenido el clientSecret, confirmamos el pago
-          this.stripe.confirmCardPayment(clientSecret, {
-            payment_method: {
-              card: this.card
+      }).then((response : any) =>{
+        if (response.error) {
+          alert(response.error.message);
+        } else {
+          if (response.paymentIntent.status === 'succeeded') {
+          alert("Pago exitoso");
+          self.paymentsService.confirmPayment(this.manager.token).subscribe({
+            next : (response : any) => {
+              this.closePaymentAndGenerateCode();
+              alert(response)
+            },
+            error : (response : any) => {
+              alert(response)
             }
-          }).then((result: any) => {
-            this.paymentProcessing = false;
-            
-            if (result.error) {
-              // Mostrar error al usuario
-              const errorElement = document.getElementById('card-errors');
-              if (errorElement) {
-                errorElement.textContent = result.error.message;
-              }
-            } else {
-              if (result.paymentIntent.status === 'succeeded') {
-                // Pago exitoso
-                this.paymentSuccess = true;
-                
-                // Actualizar estado de pago en el backend
-                if (this.manager.currentUser) {
-                  this.paymentsService.confirmPayment(this.manager.currentUser).subscribe(
-                    () => {
-                      console.log('Estado de pago actualizado correctamente');
-                    },
-                    (error) => {
-                      console.error('Error al actualizar el estado de pago', error);
-                    }
-                  );
-                } else {
-                  console.error('No hay usuario autenticado para actualizar el pago');
-                }
-              }
-            }
-          });
-        },
-        (error) => {
-          this.paymentProcessing = false;
-          console.error('Error al preparar el pago', error);
-          const errorElement = document.getElementById('card-errors');
-          if (errorElement) {
-            errorElement.textContent = 'Error al preparar el pago. Inténtelo de nuevo más tarde.';
-          }
+          })
         }
-      );
-    }
+      }
+    });
+  }
 
     closePaymentAndGenerateCode() {
       this.showPaymentForm = false;
@@ -251,7 +231,8 @@ export class CircuitComponent implements OnInit {
 
     handlePaymentButtonClick() {
       this.paymentsService.prepay().subscribe(
-        () => {
+        (clientSecret: string) => {
+          this.clientSecret = clientSecret;
           this.showPaymentForm = true; // Asegurarse de que el formulario de Stripe sea visible
           setTimeout(() => {
             this.initStripeElements(); // Llamar a initStripeElements después de que el DOM esté listo
@@ -263,5 +244,7 @@ export class CircuitComponent implements OnInit {
         }
       );
     }
+    
+
 }
 

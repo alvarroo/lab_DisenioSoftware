@@ -30,7 +30,8 @@ public class CircuitService {
 
         String code = circuit.generateCode(templateCode);
 
-        if(circuit.getName() != null){
+        if(circuit.getCubits() > 6){
+            circuit.setCode(code);
             circuitDao.save(circuit);
         }
         return code;

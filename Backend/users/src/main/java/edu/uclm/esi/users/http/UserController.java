@@ -41,14 +41,4 @@ public class UserController {
         return userService.login(username, password);
     }
     
-    
-
-    @PostMapping("/updatePaymentStatus")
-    public ResponseEntity<?> updatePaymentStatus(@RequestBody Map<String, Object> body) {
-        String username = (String) body.get("username");
-        boolean hasPaid = (boolean) body.get("hasPaid");
-        
-        userService.updatePaymentStatus(username, hasPaid);
-        return ResponseEntity.ok().build();
-    }
 }

@@ -31,7 +31,7 @@ public class CircuitController {
                                 @RequestParam(required=false) String name, @RequestBody Circuit circuit){
       
         if (name != null){
-            circuit.setName(name);
+            circuit.setId(name);
         }
         String token = request.getHeader("token_generacion");
         try{

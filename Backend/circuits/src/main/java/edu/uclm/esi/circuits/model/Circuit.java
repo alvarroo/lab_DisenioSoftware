@@ -2,26 +2,28 @@ package edu.uclm.esi.circuits.model;
 import java.util.HashMap;
 import java.util.UUID;
 
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Convert;
 
 @Entity
 public class Circuit {
     
     @Id @Column(length = 36)
     private String id;
+    @Column()
     private int outputQubits;
 
-    @Transient
-    @JsonProperty
+    @Lob
+    private String code;
+
+    @Lob
+    @Column(name = "matrix", columnDefinition = "TEXT")
+    @Convert(converter = IntArrayConverter.class)
     private int [][] table;
-    @Column(length = 50)
-    private String name;
+
 
     public Circuit(){
         this.id = UUID.randomUUID().toString();
@@ -144,12 +146,8 @@ public class Circuit {
         
         return res.toString();
     }
-    
-    public void setName(String name) {
-        this.name = name;
-    }
-    public String getName() {
-        return name;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public int getCubits() {
@@ -170,5 +168,14 @@ public class Circuit {
         sb.append("]"); // Cierra con corchete
         return sb.toString();
     }
+
+    // Add missing getters and setters
+    public String getCode() {
+        return code;
+    }
+
+    /*public void setTable(int[][] table) {
+        this.table = table;
+    }*/
 
 }

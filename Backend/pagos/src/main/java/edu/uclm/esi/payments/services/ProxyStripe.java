@@ -35,7 +35,7 @@ public class ProxyStripe {
             
             return clientSecret;
         }catch(Exception e){
-            throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "Error al procesar tu solicitud", e);
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Error al procesar tu solicitud", e);
         }
     }
 
