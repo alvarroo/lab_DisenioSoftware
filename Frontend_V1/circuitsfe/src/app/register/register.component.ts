@@ -42,23 +42,27 @@ export class RegisterComponent {
       this.passwordStrength += 25;
     }
     
-    // Verificar mayúsculas
+    // Verificar mayúsculas (no solo al inicio)
     if (!/[A-Z]/.test(this.password)) {
       this.passwordErrors.push('La contraseña debe contener al menos una letra mayúscula');
+    } else if (/^[A-Z]/.test(this.password)) {
+      this.passwordErrors.push('La letra mayúscula no puede estar solo al inicio');
     } else {
       this.passwordStrength += 25;
     }
-    
+
     // Verificar números
     if (!/[0-9]/.test(this.password)) {
       this.passwordErrors.push('La contraseña debe contener al menos un número');
     } else {
       this.passwordStrength += 25;
     }
-    
-    // Verificar caracteres especiales
+
+    // Verificar caracteres especiales (no solo al final)
     if (!/[\W_]/.test(this.password)) {
-      this.passwordErrors.push('La contraseña debe contener al menos un carácter especial');
+      this.passwordErrors.push('La contraseña debe contener al menos un carácter especial (#, -, _, @)');
+    } else if (/[\W_]$/.test(this.password)) {
+      this.passwordErrors.push('El carácter especial no puede estar solo al final');
     } else {
       this.passwordStrength += 25;
     }

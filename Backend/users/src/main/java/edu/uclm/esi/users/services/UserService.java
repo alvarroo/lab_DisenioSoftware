@@ -27,14 +27,14 @@ public class UserService {
         if (password.length() < 8) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña debe tener al menos 8 caracteres");
         }
-        if (!password.matches(".*[A-Z].*")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña debe contener al menos una letra mayúscula");
+        if (!password.matches(".*[A-Z].*") || password.matches("^[A-Z].*")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña debe incluir una letra mayúscula que no esté al inicio");
         }
         if (!password.matches(".*[0-9].*")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña debe contener al menos un número");
         }
-        if (!password.matches(".*[\\W_].*")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña debe contener al menos un carácter especial");
+        if (!password.matches(".*[\\W_].*") || password.matches(".*[\\W_]$")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña debe incluir un carácter especial que no esté al final");
         }
     }
 
