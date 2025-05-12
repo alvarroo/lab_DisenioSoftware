@@ -43,10 +43,11 @@ export class RegisterComponent {
     }
     
     // Verificar mayúsculas (no solo al inicio)
-    if (!/[A-Z]/.test(this.password)) {
+    const uppercaseMatches = this.password.match(/[A-Z]/g) || [];
+    if (uppercaseMatches.length === 0) {
       this.passwordErrors.push('La contraseña debe contener al menos una letra mayúscula');
-    } else if (/^[A-Z]/.test(this.password)) {
-      this.passwordErrors.push('La letra mayúscula no puede estar solo al inicio');
+    } else if (uppercaseMatches.length === 1 && /^[A-Z]/.test(this.password)) {
+      this.passwordErrors.push('La letra mayúscula no puede estar solo al inicio si es la única');
     } else {
       this.passwordStrength += 25;
     }
@@ -59,10 +60,11 @@ export class RegisterComponent {
     }
 
     // Verificar caracteres especiales (no solo al final)
-    if (!/[\W_]/.test(this.password)) {
+    const specialCharMatches = this.password.match(/[\W_]/g) || [];
+    if (specialCharMatches.length === 0) {
       this.passwordErrors.push('La contraseña debe contener al menos un carácter especial (#, -, _, @)');
-    } else if (/[\W_]$/.test(this.password)) {
-      this.passwordErrors.push('El carácter especial no puede estar solo al final');
+    } else if (specialCharMatches.length === 1 && /[\W_]$/.test(this.password)) {
+      this.passwordErrors.push('El carácter especial no puede estar solo al final si es el único');
     } else {
       this.passwordStrength += 25;
     }

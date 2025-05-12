@@ -24,17 +24,31 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public void validatePassword(String password) {
-        if (password.length() < 8) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña debe tener al menos 8 caracteres");
-        }
-        if (!password.matches(".*[A-Z].*") || password.matches("^[A-Z].*")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña debe incluir una letra mayúscula que no esté al inicio");
-        }
+    if (password.length() < 8) {
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña debe tener al menos 8 caracteres");
+    }
+
+    // Verificar mayúsculas (al menos una, pero no solo al inicio si es la única)
+    long uppercaseCount = password.chars().filter(Character::isUpperCase).count();
+    if (uppercaseCount == 0) {
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña debe incluir al menos una letra mayúscula");
+    }
+    if (uppercaseCount == 1 && Character.isUpperCase(password.charAt(0))) {
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La letra mayúscula no puede estar solo al inicio si es la única");
+    }
+
+    // Verificar números
         if (!password.matches(".*[0-9].*")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña debe contener al menos un número");
         }
-        if (!password.matches(".*[\\W_].*") || password.matches(".*[\\W_]$")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña debe incluir un carácter especial que no esté al final");
+
+        // Verificar caracteres especiales (al menos uno, pero no solo al final si es el único)
+        long specialCharCount = password.chars().filter(c -> "!@#$%^&*()-_=+[]{}|;:'\",.<>?/\\~`".indexOf(c) >= 0).count();
+        if (specialCharCount == 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña debe incluir al menos un carácter especial (#, -, _, @)");
+        }
+        if (specialCharCount == 1 && "!@#$%^&*()-_=+[]{}|;:'\",.<>?/\\~`".indexOf(password.charAt(password.length() - 1)) >= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El carácter especial no puede estar solo al final si es el único");
         }
     }
 
