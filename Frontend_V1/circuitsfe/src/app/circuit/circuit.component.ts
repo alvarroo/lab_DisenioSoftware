@@ -4,6 +4,7 @@ import { CircuitService } from '../circuit.service';
 import { ManagerService } from '../manager.service';
 import { PaymentsService } from '../payments.service';
 import { Router } from '@angular/router';
+import { UsersService } from '../users.service';
 
 declare var Stripe: any;
 
@@ -39,7 +40,8 @@ export class CircuitComponent implements OnInit {
       private service: CircuitService, 
       public manager: ManagerService,
       private paymentsService: PaymentsService,
-      private router: Router
+      private router: Router,
+      private uSservice: UsersService
     ) {
       this.inputQubits = 2;
       this.outputQubits = 2;
@@ -49,6 +51,22 @@ export class CircuitComponent implements OnInit {
       // Si no hay autenticación y hay una ruta de login, redirigir
       if (!this.manager.isAuthenticated) {
         this.router.navigate(['/login']);
+      }
+      if(this.manager.currentUser == undefined){
+        if (this.manager.token) {
+          this.uSservice.getUserData(this.manager.token).subscribe(
+            (userData) => {
+              this.manager.currentUser = userData;
+            },
+            (error) => {
+              console.error('Error fetching user data:', error);
+              this.errorMessage = 'Error al obtener los datos del usuario.';
+            }
+          );
+        } else {
+          console.error('Token is undefined.');
+          this.errorMessage = 'El token de autenticación no está disponible.';
+        }
       }
       console.log('User:', this.manager.currentUser);
       

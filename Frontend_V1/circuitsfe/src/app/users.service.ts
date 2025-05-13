@@ -26,8 +26,9 @@ export class UsersService {
   }
   
   getUserData(token: string): Observable<any> {
-    return this.http.get(`http://localhost:8081/tokens/getUserInfo`, {
-      params: { token }
-    });
-  }
+  return this.http.get(`http://localhost:8081/users/getUserInfo`, {
+    params: { token },
+    responseType: 'text' as 'text'
+  });
+}
 }

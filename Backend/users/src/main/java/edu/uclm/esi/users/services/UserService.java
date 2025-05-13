@@ -104,4 +104,14 @@ public class UserService {
         user.setSesionToken(null);;
         userRepository.save(user);
     }
+
+    public String searchBySesionToken(String token) {
+        User user = userRepository.findBySesionToken(token);
+        
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado");
+        }
+        
+        return user.getUsername();
+    }
 }
