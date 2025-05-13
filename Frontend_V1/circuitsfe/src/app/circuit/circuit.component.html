@@ -1,10 +1,35 @@
 <div class="circuit-container">
   <header class="app-header">
     <h1>Generador de Circuitos Cuánticos</h1>
-    <button class="btn-logout" (click)="logout()">Cerrar sesión</button>
+    <div class="header-buttons">
+      <button *ngIf="manager.isAuthenticated && manager.token" class="btn-saved-circuits" (click)="toggleSavedCircuits()">
+        Mis Circuitos Guardados
+      </button>
+      <button class="btn-logout" (click)="logout()">Cerrar sesión</button>
+    </div>
   </header>
 
   <div class="main-content">
+    <!-- Sección de circuitos guardados -->
+    <div *ngIf="showSavedCircuits" class="saved-circuits-panel">
+      <h3>Mis Circuitos Guardados</h3>
+      <div *ngIf="savedCircuits.length === 0" class="no-circuits-message">
+        No tienes circuitos guardados. Los circuitos con más de 6 qubits se guardan automáticamente.
+      </div>
+      <ul *ngIf="savedCircuits.length > 0" class="saved-circuits-list">
+        <li *ngFor="let circuit of savedCircuits" class="saved-circuit-item">
+          <div class="circuit-info">
+            <span class="circuit-id">Circuito #{{ circuit.id.substr(0, 8) }}</span>
+            <span class="circuit-qubits">{{ circuit.table[0].length }} qubits</span>
+          </div>
+          <div class="circuit-actions">
+            <button class="btn-view" (click)="loadCircuitById(circuit.id)">Ver</button>
+            <button class="btn-download" (click)="downloadCircuitCode(circuit)">Descargar</button>
+          </div>
+        </li>
+      </ul>
+    </div>
+
     <div class="config-panel">
       <h3>Configuración del circuito</h3>
       
@@ -86,9 +111,14 @@
       <div class="code-content">
         <pre>{{ generatedCode }}</pre>
       </div>
-      <button class="btn-print" (click)="printCode()">
-        <i class="fa fa-print"></i> Imprimir código
-      </button>
+      <div class="code-actions">
+        <button class="btn-print" (click)="printCode()">
+          <i class="fa fa-print"></i> Imprimir código
+        </button>
+        <button class="btn-download" (click)="downloadCircuitCode({id: 'actual', code: generatedCode})">
+          <i class="fa fa-download"></i> Descargar código
+        </button>
+      </div>
     </div>
   </div>
 </div>

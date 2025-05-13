@@ -2,6 +2,7 @@ package edu.uclm.esi.circuits.services;
 
 
 import java.io.InputStream;
+import java.util.List;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ public class CircuitService {
     private CircuitDao circuitDao;
 
 
-    public String generateCode(Circuit circuit, String token)throws Exception {
+    public String generateCode(Circuit circuit, String token, String username)throws Exception {
         
         if(circuit.getCubits() > 6){      
             if(token == null){
@@ -32,9 +33,18 @@ public class CircuitService {
 
         if(circuit.getCubits() > 6){
             circuit.setCode(code);
+            circuit.setUsername(username);
             circuitDao.save(circuit);
         }
         return code;
+    }
+    
+    public List<Circuit> getSavedCircuitsByUsername(String username) {
+        return circuitDao.findByUsername(username);
+    }
+    
+    public Circuit getCircuitById(String id) {
+        return circuitDao.findById(id).orElse(null);
     }
         
     private String readFile(String fileName) throws Exception{

@@ -1,7 +1,6 @@
 .circuit-container {
   min-height: 100vh;
   background-color: #f5f7fa;
-  font-family: Arial, sans-serif;
 }
 
 .app-header {
@@ -17,6 +16,25 @@
 .app-header h1 {
   margin: 0;
   font-size: 1.5rem;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-saved-circuits {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-saved-circuits:hover {
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
 .btn-logout {
@@ -37,6 +55,78 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
+}
+
+/* Estilos para la sección de circuitos guardados */
+.saved-circuits-panel {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.no-circuits-message {
+  padding: 1rem;
+  color: #666;
+  font-style: italic;
+}
+
+.saved-circuits-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.saved-circuit-item {
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.saved-circuit-item:last-child {
+  border-bottom: none;
+}
+
+.circuit-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.circuit-id {
+  font-weight: bold;
+  color: #333;
+}
+
+.circuit-qubits {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.circuit-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-view, .btn-download {
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+  font-size: 0.9rem;
+}
+
+.btn-view {
+  background-color: #2684ff;
+  color: white;
+}
+
+.btn-download {
+  background-color: #43a047;
+  color: white;
 }
 
 .form-group {
@@ -166,6 +256,11 @@ pre {
   white-space: pre-wrap;
   word-wrap: break-word;
   font-family: 'Courier New', Courier, monospace;
+}
+
+.code-actions {
+  display: flex;
+  gap: 1rem;
 }
 
 .btn-print {
