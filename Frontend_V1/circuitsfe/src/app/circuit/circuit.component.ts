@@ -25,6 +25,11 @@ export class CircuitComponent implements OnInit {
     paymentProcessing: boolean = false;
     paymentSuccess: boolean = false;
     
+    // Nuevas propiedades para la recuperación de circuitos
+    savedCircuits: any[] = [];
+    showSavedCircuits: boolean = false;
+    selectedCircuit: any = null;
+    
     // Para Stripe
     stripe: any;
     card: any;
@@ -47,13 +52,18 @@ export class CircuitComponent implements OnInit {
       }
       console.log('User:', this.manager.currentUser);
       
-        try {
-          await this.loadStripeScript();
-          console.log('Script de Stripe cargado correctamente');
-        } catch (error) {
-          console.error(error);
-          this.errorMessage = 'Error al cargar el script de Stripe. Por favor, recargue la página.';
+      try {
+        await this.loadStripeScript();
+        console.log('Script de Stripe cargado correctamente');
+        
+        // Cargar circuitos guardados si el usuario está autenticado
+        if (this.manager.isAuthenticated && this.manager.currentUser) {
+          this.loadSavedCircuits();
         }
+      } catch (error) {
+        console.error(error);
+        this.errorMessage = 'Error al cargar el script de Stripe. Por favor, recargue la página.';
+      }
     }
 
     loadStripeScript() {
@@ -66,6 +76,55 @@ export class CircuitComponent implements OnInit {
         };
         document.body.appendChild(script);
       }
+    }
+
+    loadSavedCircuits() {
+      if (!this.manager.currentUser) return;
+      
+      this.service.getUserCircuits(this.manager.currentUser).subscribe(
+        (circuits) => {
+          this.savedCircuits = circuits;
+          console.log('Circuitos guardados:', this.savedCircuits);
+        },
+        (error) => {
+          console.error('Error al cargar circuitos guardados:', error);
+          this.errorMessage = 'Error al cargar circuitos guardados.';
+        }
+      );
+    }
+    
+    toggleSavedCircuits() {
+      this.showSavedCircuits = !this.showSavedCircuits;
+      if (this.showSavedCircuits && this.savedCircuits.length === 0) {
+        this.loadSavedCircuits();
+      }
+    }
+    
+    loadCircuitById(circuitId: string) {
+      this.service.getCircuitById(circuitId).subscribe(
+        (circuit) => {
+          this.selectedCircuit = circuit;
+          this.generatedCode = circuit.code;
+          this.showCode = true;
+          this.showSavedCircuits = false;
+        },
+        (error) => {
+          console.error('Error al cargar el circuito:', error);
+          this.errorMessage = 'Error al cargar el circuito seleccionado.';
+        }
+      );
+    }
+    
+    downloadCircuitCode(circuit: any) {
+      const blob = new Blob([circuit.code], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `circuito_${circuit.id}.py`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
     }
 
     buildMatrix() {
@@ -91,7 +150,7 @@ export class CircuitComponent implements OnInit {
         return;
       }
 
-      this.service.generateCode(this.outputQubits, this.matrix, this.manager.token).subscribe(
+      this.service.generateCode(this.outputQubits, this.matrix, this.manager.token, this.manager.currentUser).subscribe(
         (response: any) => {
           this.generatedCode = response;
           this.showCode = true;
