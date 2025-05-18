@@ -14,5 +14,8 @@ GO
 CREATE USER [QGenApp] FOR LOGIN [QGenApp];
 GO
 
-EXEC sp_addrolemember N'db_ddladmin', N'QGenApp';
-GO
+GRANT ALTER ON SCHEMA::dbo TO QGenApp;
+GRANT CREATE TABLE TO QGenApp;
+
+EXEC sp_addrolemember 'db_datareader', 'QGenApp';
+EXEC sp_addrolemember 'db_datawriter', 'QGenApp';
